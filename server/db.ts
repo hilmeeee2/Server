@@ -244,7 +244,7 @@ export async function getMessages(conversationId: number): Promise<Message[]> {
 
 export async function createFruit(data: InsertFruit): Promise<Fruit> {
   const db = await getDb();
-  if (!db) throw new Error(""Database not available"");
+  if (!db) throw new Error("Database not available");
   
   const [result] = await db.insert(fruits).values(data);
   const insertId = (result as any).insertId;
@@ -255,7 +255,7 @@ export async function createFruit(data: InsertFruit): Promise<Fruit> {
 
 export async function getFruits(userId?: number): Promise<Fruit[]> {
   const db = await getDb();
-  if (!db) throw new Error(""Database not available"");
+  if (!db) throw new Error("Database not available");
   
   // If userId is provided, return all fruits for that user (both available and sold)
   if (userId) {
@@ -278,7 +278,7 @@ export async function getFruits(userId?: number): Promise<Fruit[]> {
 
 export async function updateFruit(id: number, sellerId: number, data: Partial<InsertFruit>): Promise<void> {
   const db = await getDb();
-  if (!db) throw new Error(""Database not available"");
+  if (!db) throw new Error("Database not available");
   
   // Verify ownership
   const existing = await db.select().from(fruits).where(and(eq(fruits.id, id), eq(fruits.sellerId, sellerId))).limit(1);
@@ -289,7 +289,7 @@ export async function updateFruit(id: number, sellerId: number, data: Partial<In
 
 export async function deleteFruit(id: number, sellerId: number): Promise<void> {
   const db = await getDb();
-  if (!db) throw new Error(""Database not available"");
+  if (!db) throw new Error("Database not available");
   
   // Verify ownership
   const existing = await db.select().from(fruits).where(and(eq(fruits.id, id), eq(fruits.sellerId, sellerId))).limit(1);
