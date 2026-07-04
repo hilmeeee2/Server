@@ -282,7 +282,7 @@ export async function updateFruit(id: number, sellerId: number, data: Partial<In
   
   // Verify ownership
   const existing = await db.select().from(fruits).where(and(eq(fruits.id, id), eq(fruits.sellerId, sellerId))).limit(1);
-  if (!existing.length) throw new Error(""Fruit not found or unauthorized"");
+  if (!existing.length) throw new Error("Fruit not found or unauthorized");
   
   await db.update(fruits).set(data).where(eq(fruits.id, id));
 }
@@ -293,7 +293,7 @@ export async function deleteFruit(id: number, sellerId: number): Promise<void> {
   
   // Verify ownership
   const existing = await db.select().from(fruits).where(and(eq(fruits.id, id), eq(fruits.sellerId, sellerId))).limit(1);
-  if (!existing.length) throw new Error(""Fruit not found or unauthorized"");
+  if (!existing.length) throw new Error("Fruit not found or unauthorized");
   
   await db.delete(fruits).where(eq(fruits.id, id));
 }
