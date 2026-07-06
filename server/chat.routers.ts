@@ -107,9 +107,26 @@ export const chatRouter = router({
           });
         }
 
-        // Upload to storage
-        const fileKey = `chat-users/${input.userId}/${input.fileName}`;
-        const { url, key } = await storagePut(fileKey, buffer, input.mimeType);
+        // Upload to ImgBB
+        const formData = new URLSearchParams();
+        formData.append("key", "3dfddeb29f2b603514006a0931f529c3");
+        formData.append("image", input.imageBase64);
+
+        const imgBbRes = await fetch("https://api.imgbb.com/1/upload", {
+          method: "POST",
+          body: formData,
+        });
+        
+        const imgBbData = await imgBbRes.json();
+        if (!imgBbData.success) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "ImgBB upload failed: " + JSON.stringify(imgBbData),
+          });
+        }
+
+        const url = imgBbData.data.url;
+        const key = imgBbData.data.id;
 
         // Update user with image URL
         await updateChatUser(input.userId, {
