@@ -96,13 +96,28 @@ export async function createChatUser(data: InsertChatUser): Promise<ChatUser> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  await db.insert(chatUsers).values(data);
+  const [res] = await db.insert(chatUsers).values(data);
+  const insertId = (res as any).insertId;
   
-  // Get the created user by phone (unique identifier)
-  const user = await db.select().from(chatUsers).where(eq(chatUsers.phone, data.phone!)).limit(1);
+  // Get the created user by ID
+  const user = await db.select().from(chatUsers).where(eq(chatUsers.id, insertId)).limit(1);
   if (!user.length) throw new Error("Failed to create user");
   
   return user[0];
+}
+
+export async function getChatUserByCredentials(phone: string, name: string, password: string): Promise<ChatUser | null> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.select().from(chatUsers).where(
+    and(
+      eq(chatUsers.phone, phone),
+      eq(chatUsers.name, name),
+      eq(chatUsers.password, password)
+    )
+  ).limit(1);
+  return result.length > 0 ? result[0] : null;
 }
 
 export async function getChatUserByPhone(phone: string): Promise<ChatUser | null> {

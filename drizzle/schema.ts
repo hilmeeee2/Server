@@ -31,8 +31,9 @@ export type InsertUser = typeof users.$inferInsert;
  */
 export const chatUsers = mysqlTable("chat_users", {
   id: int("id").autoincrement().primaryKey(),
-  phone: varchar("phone", { length: 20 }).notNull().unique(),
+  phone: varchar("phone", { length: 20 }).notNull(),
   name: varchar("name", { length: 255 }).notNull(),
+  password: varchar("password", { length: 255 }).notNull().default("123456"),
   imageUrl: text("imageUrl"),
   imageKey: varchar("imageKey", { length: 255 }),
   address: text("address"),

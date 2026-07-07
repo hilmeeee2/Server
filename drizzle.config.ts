@@ -10,6 +10,6 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "mysql",
   dbCredentials: {
-    url: connectionString,
+    url: 'mysql://4W2CMgAo8hPpomX.root:3CGJJ5uW5cw4UWqO@gateway01.eu-central-1.prod.aws.tidbcloud.com:4000/test?ssl={\"rejectUnauthorized\":true}',
   },
 });

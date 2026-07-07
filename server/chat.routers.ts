@@ -2,7 +2,7 @@ import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
 import {
   createChatUser,
-  getChatUserByPhone,
+  getChatUserByCredentials,
   getChatUserById,
   updateChatUser,
   getOrCreateConversation,
@@ -22,26 +22,30 @@ export const chatRouter = router({
   registerUser: publicProcedure
     .input(
       z.object({
-        phone: z.string().min(10, "Phone number must be at least 10 digits"),
+        phone: z.string().min(8, "Phone number must be at least 8 digits"),
         name: z.string().min(1, "Name is required"),
+        password: z.string().min(1, "Password is required"),
         address: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {
       try {
-        // Check if user already exists
-        const existingUser = await getChatUserByPhone(input.phone);
+        // Check if user exactly matches (phone, name, password)
+        const existingUser = await getChatUserByCredentials(input.phone, input.name, input.password);
         if (existingUser) {
-          throw new TRPCError({
-            code: "CONFLICT",
-            message: "User with this phone number already exists",
-          });
+          // User exists, return their id
+          return {
+            success: true,
+            userId: existingUser.id,
+            user: existingUser,
+          };
         }
 
-        // Create new user
+        // Otherwise create new user
         const user = await createChatUser({
           phone: input.phone,
           name: input.name,
+          password: input.password,
           address: input.address,
         });
 
