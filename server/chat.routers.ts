@@ -22,7 +22,7 @@ export const chatRouter = router({
   registerUser: publicProcedure
     .input(
       z.object({
-        phone: z.string().min(8, "Phone number must be at least 8 digits"),
+        phone: z.string().min(1, "Phone number is required"),
         name: z.string().min(1, "Name is required"),
         password: z.string().min(1, "Password is required"),
         address: z.string().optional(),
