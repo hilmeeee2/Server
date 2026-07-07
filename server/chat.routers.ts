@@ -22,8 +22,8 @@ export const chatRouter = router({
   registerUser: publicProcedure
     .input(
       z.object({
-        phone: z.string().min(1, "Phone number is required"),
-        name: z.string().min(1, "Name is required"),
+        phone: z.string().regex(/^7[01378]\d{7}$/, "رقم الهاتف يجب أن يتكون من 9 أرقام ويبدأ بـ 7 (رقم يمني صالح)"),
+        name: z.string().regex(/^\S+\s+\S+\s+\S+.*$/, "الاسم يجب أن يكون ثلاثياً على الأقل"),
         password: z.string().min(1, "Password is required"),
         address: z.string().optional(),
       })
